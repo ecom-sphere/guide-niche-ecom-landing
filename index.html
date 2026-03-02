@@ -913,7 +913,31 @@
         font-size: 16px;
       }
     }
-  </style>
+  
+/* ===== SYSTEME IFRAME INTEGRATION ===== */
+.systeme-form-wrap {
+  width: 100%;
+  max-width: 520px;
+  margin: 24px auto 0;
+  border-radius: 16px;
+  overflow: hidden;
+  background: transparent;
+}
+.systeme-iframe {
+  width: 100%;
+  height: 380px;
+  border: none;
+  display: block;
+  border-radius: 16px;
+  transition: height 0.3s ease;
+}
+@media (max-width: 600px) {
+  .systeme-iframe {
+    height: 420px;
+  }
+}
+/* ===== END SYSTEME IFRAME ===== */
+</style>
 </head>
 <body>
   <!-- Navbar -->
@@ -946,15 +970,17 @@
           <h1>Trouve Ta Niche E-commerce Rentable</h1>
           <p>Un guide gratuit pour identifier une niche réellement profitable, validée en 4 étapes et adaptée à ton profil, sans promesses bidons, juste la méthode qui fonctionne.</p>
           
-          <form class="hero__form" onsubmit="submitForm(event)">
-            <input type="email" id="email" class="hero__input" placeholder="Ton meilleur email" required />
-            <input type="text" id="name" class="hero__input" placeholder="Ton prénom" required />
-            <button type="submit" class="hero__btn">Je veux le guide gratuit</button>
-            <div class="hero__form-note">
-              ✓ Accès instantané · ✓ Pas de carte bancaire · ✓ Pas de spam
-            </div>
-            <p class="rgpd-notice">En cliquant, tu acceptes de recevoir des emails de Speed Ecom (désabonnement en 1 clic).</p>
-          </form>
+          <div class="systeme-form-wrap" id="form-wrap-hero">
+  <iframe
+    id="systeme-iframe-hero"
+    class="systeme-iframe"
+    src="https://www.speed-ecom.com/optin-guide-2026"
+    frameborder="0"
+    scrolling="no"
+    loading="lazy"
+    title="Formulaire d'inscription gratuite"
+  ></iframe>
+</div>
         </div>
 
         <div class="hero__img-wrap">
@@ -1245,12 +1271,17 @@
     <div class="cta-inner">
       <h2>T'es prêt à trouver ta niche ?</h2>
       <p>Télécharge le guide gratuit et commence dès maintenant. Accès instantané, pas de spam, jamais.</p>
-      <form class="cta-form" onsubmit="submitForm(event)">
-        <input type="email" name="email" class="hero__input" placeholder="Ton meilleur email" required />
-        <input type="text" name="name" class="hero__input" placeholder="Ton prénom" required />
-        <button type="submit" class="cta-btn">Je veux le guide gratuit →</button>
-      <p class="rgpd-notice" style="text-align:center;margin-top:8px;">En cliquant, tu acceptes de recevoir des emails de Speed Ecom (désabonnement en 1 clic).</p>
-      </form>
+      <div class="systeme-form-wrap" id="form-wrap-cta">
+  <iframe
+    id="systeme-iframe-cta"
+    class="systeme-iframe"
+    src="https://www.speed-ecom.com/optin-guide-2026"
+    frameborder="0"
+    scrolling="no"
+    loading="lazy"
+    title="Formulaire d'inscription gratuite"
+  ></iframe>
+</div>
     </div>
   </section>
 
@@ -1322,6 +1353,42 @@
       answer.classList.toggle('open');
       icon.classList.toggle('open');
     }
-  </script>
+  
+  /* ===== SYSTEME IFRAME RESIZE & REDIRECT ===== */
+  (function() {
+    var iframes = ['systeme-iframe-hero', 'systeme-iframe-cta'];
+
+    window.addEventListener('message', function(e) {
+      // Resize from Systeme page
+      if (e.data && e.data.type === 'resize' && e.data.height) {
+        iframes.forEach(function(id) {
+          var el = document.getElementById(id);
+          if (el) el.style.height = (parseInt(e.data.height) + 20) + 'px';
+        });
+      }
+      // Redirect signal from thank you page
+      if (e.data && e.data.type === 'redirect' && e.data.url) {
+        window.location.href = e.data.url;
+      }
+    });
+
+    // Fallback: detect iframe load changes (top redirect allowed cross-origin)
+    iframes.forEach(function(id) {
+      var iframe = document.getElementById(id);
+      if (!iframe) return;
+      iframe.addEventListener('load', function() {
+        try {
+          // If same-origin after redirect — resize
+          var h = iframe.contentWindow.document.body.scrollHeight;
+          if (h > 0) iframe.style.height = (h + 20) + 'px';
+        } catch(e) {
+          // Cross-origin: expected, ignore
+        }
+      });
+    });
+  })();
+  /* ===== END SYSTEME IFRAME ===== */
+
+</script>
 </body>
 </html>
