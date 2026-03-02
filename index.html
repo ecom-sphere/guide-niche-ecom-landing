@@ -915,26 +915,61 @@
     }
   
 /* ===== SYSTEME IFRAME INTEGRATION ===== */
-.systeme-form-wrap {
+/* ── Formulaire custom Systeme.io ── */
+.sio-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 28px;
   width: 100%;
-  max-width: 520px;
-  margin: 24px auto 0;
-  border-radius: 16px;
-  overflow: hidden;
-  background: transparent;
 }
-.systeme-iframe {
+.sio-input {
+  padding: 18px 20px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 12px;
+  color: var(--white);
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  transition: border-color 0.2s, background 0.2s;
   width: 100%;
-  height: 380px;
+}
+.sio-input::placeholder { color: rgba(255,255,255,0.38); }
+.sio-input:focus {
+  outline: none;
+  border-color: var(--gold-500);
+  background: rgba(255,255,255,0.09);
+}
+.sio-btn {
+  padding: 18px 28px;
+  background: linear-gradient(135deg, var(--gold-500), var(--gold-400));
+  color: var(--navy-900);
   border: none;
-  display: block;
-  border-radius: 16px;
-  transition: height 0.3s ease;
+  border-radius: 12px;
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 8px 24px rgba(232,168,0,0.28);
+  width: 100%;
+}
+.sio-btn:hover { transform: translateY(-2px); box-shadow: 0 14px 32px rgba(232,168,0,0.38); }
+.sio-btn:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+.sio-trust {
+  font-size: 12px;
+  color: var(--gray-300);
+  letter-spacing: 0.01em;
+}
+.sio-legal {
+  font-size: 11px;
+  color: rgba(203,213,225,0.45);
+  font-style: italic;
+  line-height: 1.5;
 }
 @media (max-width: 600px) {
-  .systeme-iframe {
-    height: 420px;
-  }
+  .sio-input { font-size: 15px; padding: 16px 18px; }
+  .sio-btn   { font-size: 15px; padding: 16px 18px; }
 }
 /* ===== END SYSTEME IFRAME ===== */
 </style>
@@ -970,17 +1005,13 @@
           <h1>Trouve Ta Niche E-commerce Rentable</h1>
           <p>Un guide gratuit pour identifier une niche réellement profitable, validée en 4 étapes et adaptée à ton profil, sans promesses bidons, juste la méthode qui fonctionne.</p>
           
-          <div class="systeme-form-wrap" id="form-wrap-hero">
-  <iframe
-    id="systeme-iframe-hero"
-    class="systeme-iframe"
-    src="https://www.speed-ecom.com/optin-guide-2026"
-    frameborder="0"
-    scrolling="no"
-    loading="lazy"
-    title="Formulaire d'inscription gratuite"
-  ></iframe>
-</div>
+          <form class="sio-form hero__form" id="form-hero" onsubmit="submitSIO(event,this)">
+  <input class="sio-input" type="email"  name="email"      placeholder="Ton meilleur email" required autocomplete="email" />
+  <input class="sio-input" type="text"   name="first_name" placeholder="Ton prénom"         required autocomplete="given-name" />
+  <button class="sio-btn" type="submit">Je veux le guide gratuit</button>
+  <p class="sio-trust">✓ Accès instantané &nbsp;·&nbsp; ✓ Pas de carte bancaire &nbsp;·&nbsp; ✓ Pas de spam</p>
+  <p class="sio-legal">En cliquant, tu acceptes de recevoir des emails de Speed Ecom (désabonnement en 1 clic).</p>
+</form>
         </div>
 
         <div class="hero__img-wrap">
@@ -1271,17 +1302,13 @@
     <div class="cta-inner">
       <h2>T'es prêt à trouver ta niche ?</h2>
       <p>Télécharge le guide gratuit et commence dès maintenant. Accès instantané, pas de spam, jamais.</p>
-      <div class="systeme-form-wrap" id="form-wrap-cta">
-  <iframe
-    id="systeme-iframe-cta"
-    class="systeme-iframe"
-    src="https://www.speed-ecom.com/optin-guide-2026"
-    frameborder="0"
-    scrolling="no"
-    loading="lazy"
-    title="Formulaire d'inscription gratuite"
-  ></iframe>
-</div>
+      <form class="sio-form cta-form" id="form-cta" onsubmit="submitSIO(event,this)">
+  <input class="sio-input" type="email"  name="email"      placeholder="Ton meilleur email" required autocomplete="email" />
+  <input class="sio-input" type="text"   name="first_name" placeholder="Ton prénom"         required autocomplete="given-name" />
+  <button class="sio-btn" type="submit">Je veux le guide gratuit</button>
+  <p class="sio-trust">✓ Accès instantané &nbsp;·&nbsp; ✓ Pas de carte bancaire &nbsp;·&nbsp; ✓ Pas de spam</p>
+  <p class="sio-legal">En cliquant, tu acceptes de recevoir des emails de Speed Ecom (désabonnement en 1 clic).</p>
+</form>
     </div>
   </section>
 
@@ -1300,49 +1327,36 @@
   </footer>
 
   <script>
-    const FORM_ENDPOINT = '/optin';
 
-    function submitForm(e) {
+
+    function submitSIO(e, form) {
       e.preventDefault();
-
-      const email = document.getElementById('email').value.trim();
-      const name  = document.getElementById('name').value.trim();
-
-      if (!email) {
-        alert('Veuillez entrer votre email');
-        return;
-      }
-
-      const btn = e.target.querySelector('button[type="submit"]');
-      if (btn) { btn.disabled = true; btn.textContent = 'Envoi en cours…'; }
-
-      const body = 'email=' + encodeURIComponent(email)
-                 + '&first_name=' + encodeURIComponent(name);
-
-      fetch(FORM_ENDPOINT, {
-        method:   'POST',
-        headers:  {'Content-Type': 'application/x-www-form-urlencoded'},
-        body:     body,
-        redirect: 'manual'
+      var btn = form.querySelector('.sio-btn');
+      var origText = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = 'Envoi en cours…';
+      fetch('/.netlify/functions/submit-optin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email:      form.querySelector('[name="email"]').value,
+          first_name: form.querySelector('[name="first_name"]').value,
+          timeZone:   Intl.DateTimeFormat().resolvedOptions().timeZone || 'Europe/Paris',
+          isDesktop:  window.innerWidth >= 768
+        })
       })
-      .then(() => {
-        e.target.innerHTML =
-          '<div style="text-align:center;padding:24px 0;">' +
-          '<div style="font-size:2.5rem;margin-bottom:12px;">✅</div>' +
-          '<p style="font-size:1.1rem;font-weight:700;color:#22c55e;margin-bottom:8px;">C\'est parti !</p>' +
-          '<p style="color:#9BA3B8;">Redirection en cours…</p>' +
-          '</div>';
-        setTimeout(() => { window.location.href = 'https://www.speed-ecom.com/guide-niche-2026'; }, 1500);
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        if (data.success && data.redirect) {
+          window.location.href = data.redirect;
+        } else {
+          btn.disabled = false;
+          btn.textContent = origText;
+        }
       })
-      .catch(() => {
-        /* fetch échoue sur opaque redirects cross-origin, le lead est quand même enregistré */
-        e.target.innerHTML =
-          '<div style="text-align:center;padding:24px 0;">' +
-          '<div style="font-size:2.5rem;margin-bottom:12px;">✅</div>' +
-          '<p style="font-size:1.1rem;font-weight:700;color:#22c55e;margin-bottom:8px;">C\'est parti !</p>' +
-          '<p style="color:#9BA3B8;">Redirection en cours…</p>' +
-          '</div>';
-        setTimeout(() => { window.location.href = 'https://www.speed-ecom.com/guide-niche-2026'; }, 1500);
+      .catch(function() {
+        btn.disabled = false;
+        btn.textContent = origText;
       });
     }
 
@@ -1354,40 +1368,6 @@
       icon.classList.toggle('open');
     }
   
-  /* ===== SYSTEME IFRAME RESIZE & REDIRECT ===== */
-  (function() {
-    var iframes = ['systeme-iframe-hero', 'systeme-iframe-cta'];
-
-    window.addEventListener('message', function(e) {
-      // Resize from Systeme page
-      if (e.data && e.data.type === 'resize' && e.data.height) {
-        iframes.forEach(function(id) {
-          var el = document.getElementById(id);
-          if (el) el.style.height = (parseInt(e.data.height) + 20) + 'px';
-        });
-      }
-      // Redirect signal from thank you page
-      if (e.data && e.data.type === 'redirect' && e.data.url) {
-        window.location.href = e.data.url;
-      }
-    });
-
-    // Fallback: detect iframe load changes (top redirect allowed cross-origin)
-    iframes.forEach(function(id) {
-      var iframe = document.getElementById(id);
-      if (!iframe) return;
-      iframe.addEventListener('load', function() {
-        try {
-          // If same-origin after redirect — resize
-          var h = iframe.contentWindow.document.body.scrollHeight;
-          if (h > 0) iframe.style.height = (h + 20) + 'px';
-        } catch(e) {
-          // Cross-origin: expected, ignore
-        }
-      });
-    });
-  })();
-  /* ===== END SYSTEME IFRAME ===== */
 
 </script>
 </body>
