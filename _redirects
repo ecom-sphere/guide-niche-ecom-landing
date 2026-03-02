@@ -1,2 +1,8 @@
-# Proxy form submissions to systeme.io CloudFront (contourne le changement DNS)
+# Redirige la racine vers le slug principal
+/  /guide-ecom-2026  301
+
+# Sert la landing page sur le slug
+/guide-ecom-2026  /index.html  200
+
+# Proxy form submissions to systeme.io CloudFront
 /optin  https://d2vp8iawkn27.cloudfront.net/guide-ecom-2026  200
