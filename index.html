@@ -218,6 +218,37 @@
       margin-top: 8px;
     }
 
+
+    .rgpd-label {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 12px;
+      color: var(--gray-300);
+      cursor: pointer;
+      text-align: left;
+      margin-top: 4px;
+    }
+    .rgpd-label input[type="checkbox"] {
+      margin-top: 2px;
+      accent-color: var(--gold-500);
+      width: 15px;
+      height: 15px;
+      flex-shrink: 0;
+    }
+    .cta-form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-width: 480px;
+      margin: 28px auto 0;
+    }
+    .cta-form .hero__input {
+      text-align: center;
+    }
+    .cta-form .hero__btn {
+      width: 100%;
+    }
     .hero__img-wrap {
       position: relative;
     }
@@ -881,7 +912,7 @@
   <nav class="navbar">
     <div class="navbar-inner">
       <div class="navbar-logo">
-        <img src="https://d1yei2z3i6k35z.cloudfront.net/120212/2cc6c98a7e93a_lesnicherentables.png" alt="Les Niches Rentables" />
+        <img src="https://bucolic-melba-7a4e7b.netlify.app/logo-speed-ecom.png" alt="Speed Ecom" />
       </div>
       <button class="navbar-cta" onclick="document.getElementById('email').focus()">Accéder au guide</button>
     </div>
@@ -889,7 +920,7 @@
 
   <!-- Urgency Bar -->
   <div class="urgency-bar">
-    ⚡ Accès 100% gratuit · Disponible maintenant · Mars 2026
+    🔥 <strong>1 243 entrepreneurs</strong> ont déjà téléchargé ce guide · Accès 100% gratuit · Instantané
   </div>
 
   <!-- Ticker -->
@@ -909,11 +940,15 @@
           
           <form class="hero__form" onsubmit="submitForm(event)">
             <input type="email" id="email" class="hero__input" placeholder="Ton meilleur email" required />
-            <input type="text" id="name" class="hero__input" placeholder="Ton prénom (optionnel)" />
+            <input type="text" id="name" class="hero__input" placeholder="Ton prénom" required />
             <button type="submit" class="hero__btn">Je veux le guide gratuit</button>
             <div class="hero__form-note">
               ✓ Accès instantané · ✓ Pas de carte bancaire · ✓ Pas de spam
             </div>
+            <label class="rgpd-label">
+              <input type="checkbox" id="rgpd" required />
+              J'accepte de recevoir des emails de Speed Ecom (désabonnement en 1 clic, conformément au RGPD).
+            </label>
           </form>
         </div>
 
@@ -1188,7 +1223,7 @@
       <h2 class="section-title">Qui suis-je ?</h2>
       
       <div class="inside-grid">
-        <img class="author-photo" src="https://d1yei2z3i6k35z.cloudfront.net/120212/57bfc8d9a49fc_cedric_2024.jpg" alt="Cédric Anger" />
+        <img class="author-photo" src="https://bucolic-melba-7a4e7b.netlify.app/cedric-anger.png" alt="Cédric Anger" />
         <div class="author-content">
           <h3>Cédric Anger</h3>
           <p>
@@ -1210,7 +1245,15 @@
     <div class="cta-inner">
       <h2>T'es prêt à trouver ta niche ?</h2>
       <p>Télécharge le guide gratuit et commence dès maintenant. Accès instantané, pas de spam, jamais.</p>
-      <button class="cta-btn" onclick="document.getElementById('email').focus()">Je veux le guide gratuit</button>
+      <form class="cta-form" onsubmit="submitForm(event)">
+        <input type="email" name="email" class="hero__input" placeholder="Ton meilleur email" required />
+        <input type="text" name="name" class="hero__input" placeholder="Ton prénom" required />
+        <label class="rgpd-label" style="color:rgba(255,255,255,0.6);margin:0 auto;max-width:400px;">
+          <input type="checkbox" required style="accent-color:var(--gold-500);width:15px;height:15px;flex-shrink:0;margin-top:2px;" />
+          J'accepte de recevoir des emails de Speed Ecom (désabonnement en 1 clic).
+        </label>
+        <button type="submit" class="cta-btn">Je veux le guide gratuit →</button>
+      </form>
     </div>
   </section>
 
@@ -1218,7 +1261,7 @@
   <footer class="footer">
     <div class="footer-inner">
       <div class="footer-left">
-        © 2026 Les Niches Rentables. Tous droits réservés.
+        © 2026 Speed Ecom. Tous droits réservés.
       </div>
       <div class="footer-links">
         <a href="#mentions">Mentions légales</a>
