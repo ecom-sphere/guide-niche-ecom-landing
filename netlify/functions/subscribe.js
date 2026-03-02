@@ -16,11 +16,14 @@ exports.handler = async (event) => {
     }
 
     // Appel API systeme.io
+    const apiKey = process.env.SYSTEME_API_KEY || '';
+    console.log(`subscribe: email=${email}, apiKeyPresent=${apiKey.length > 0}`);
+
     const res = await fetch('https://api.systeme.io/api/contacts', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-API-Key': process.env.SYSTEME_API_KEY || ''
+        'X-API-Key': apiKey
       },
       body: JSON.stringify({
         email,
@@ -28,6 +31,9 @@ exports.handler = async (event) => {
         fields: []
       })
     });
+
+    const resBody = await res.text();
+    console.log(`systeme.io response: status=${res.status}, body=${resBody.substring(0, 200)}`);
 
     // On retourne 200 dans tous les cas pour ne pas bloquer la redirection côté client
     return { statusCode: 200, body: 'OK' };
