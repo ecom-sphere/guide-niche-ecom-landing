@@ -823,6 +823,10 @@
 
       .hero__grid {
         grid-template-columns: 1fr;
+        gap: 20px;
+      }
+      .sio-form {
+        margin-top: 12px;
       }
 
       .hero__content h1 {
@@ -957,15 +961,19 @@
 .sio-btn:hover { transform: translateY(-2px); box-shadow: 0 14px 32px rgba(232,168,0,0.38); }
 .sio-btn:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
 .sio-trust {
-  font-size: 10px;
+  font-size: 11px;
   color: var(--gray-300);
   letter-spacing: 0.01em;
 }
 .sio-legal {
-  font-size: 9.5px;
+  font-size: 10px;
   color: rgba(203,213,225,0.45);
   font-style: italic;
   line-height: 1.5;
+}
+@media (max-width: 768px) {
+  .sio-trust { font-size: 10px; }
+  .sio-legal { font-size: 9.5px; }
 }
 @media (max-width: 600px) {
   .sio-input { font-size: 15px; padding: 16px 18px; }
