@@ -1302,13 +1302,49 @@
     function getUTMParams() {
       var p = new URLSearchParams(window.location.search);
       var ref = document.referrer || '';
-      var src = p.get('utm_source') || (ref.includes('tiktok') ? 'tiktok' : ref.includes('instagram') ? 'instagram' : ref.includes('facebook') ? 'facebook' : ref.includes('youtube') ? 'youtube' : 'direct');
+
+      // Detect source : UTM explicite en priorité, sinon détection via referrer
+      var src = p.get('utm_source');
+      if (!src) {
+        if (ref.includes('l.tiktok.com') || ref.includes('vm.tiktok.com') || ref.includes('tiktok.com')) {
+          src = 'tiktok';
+        } else if (ref.includes('links.speed-ecom.eu')) {
+          // Ton lien en bio perso → TikTok bio
+          src = 'tiktok';
+        } else if (ref.includes('linktr.ee') || ref.includes('linktree.com')) {
+          src = 'tiktok';
+        } else if (ref.includes('link.bio') || ref.includes('later.com') || ref.includes('lnk.bio') || ref.includes('beacons.ai') || ref.includes('bio.site') || ref.includes('stan.store')) {
+          // Autres outils de lien en bio
+          src = 'link_bio';
+        } else if (ref.includes('instagram.com') || ref.includes('l.instagram.com')) {
+          src = 'instagram';
+        } else if (ref.includes('facebook.com') || ref.includes('l.facebook.com') || ref.includes('fb.com')) {
+          src = 'facebook';
+        } else if (ref.includes('youtube.com') || ref.includes('youtu.be')) {
+          src = 'youtube';
+        } else if (ref.includes('t.co') || ref.includes('twitter.com') || ref.includes('x.com')) {
+          src = 'twitter';
+        } else if (ref !== '') {
+          src = 'referral';
+        } else {
+          src = 'direct';
+        }
+      }
+
+      // Détecter medium : si pas fourni, déduire selon la source
+      var medium = p.get('utm_medium');
+      if (!medium) {
+        if (src === 'tiktok' || src === 'instagram' || src === 'facebook') medium = 'social_organic';
+        else if (src === 'link_bio') medium = 'bio';
+        else medium = 'direct';
+      }
+
       return {
         utm_source:   src,
-        utm_medium:   p.get('utm_medium')   || 'organic',
+        utm_medium:   medium,
         utm_campaign: p.get('utm_campaign') || '',
         utm_content:  p.get('utm_content')  || '',
-        referrer:     ref
+        referrer:     ref.substring(0, 200)
       };
     }
 
