@@ -101,7 +101,7 @@ exports.handler = async function(event) {
       return { statusCode: 500, headers, body: JSON.stringify({ success: false, error: 'Failed to send email' }) };
     }
 
-    return { statusCode: 200, headers, body: JSON.stringify({ success: true, redirect: 'https://speed-ecom.eu/guide' }) };
+    return { statusCode: 200, headers, body: JSON.stringify({ success: true, redirect: 'https://speed-ecom.eu/merci-guide' }) };
 
   } catch (err) {
     console.error('Error:', err.message);
