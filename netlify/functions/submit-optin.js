@@ -45,7 +45,7 @@ exports.handler = async function(event) {
     return { statusCode: 400, headers, body: JSON.stringify({ success: false, error: 'Invalid JSON' }) };
   }
 
-  const { email, first_name } = data;
+  const { email, first_name, tunnel, utm_source, utm_medium, utm_campaign, utm_content, referrer, timeZone, isDesktop } = data;
   if (!email || !first_name) {
     return { statusCode: 400, headers, body: JSON.stringify({ success: false, error: 'Missing fields' }) };
   }
@@ -64,10 +64,26 @@ exports.handler = async function(event) {
   try {
     const today = new Date().toISOString().split('T')[0];
 
+    // Build contact attributes (include all tracking data)
+    const contactAttributes = {
+      PRENOM: first_name,
+      SIGNUP_DATE: today,
+      SEQUENCE_STEP: 1,
+      PAYS: country,
+      TUNNEL: tunnel || 'guide-niche-ecom',
+      UTM_SOURCE: utm_source || 'direct',
+      UTM_MEDIUM: utm_medium || 'organic',
+      UTM_CAMPAIGN: utm_campaign || '',
+      UTM_CONTENT: utm_content || '',
+      REFERRER: (referrer || '').substring(0, 200),
+      TIMEZONE: timeZone || '',
+      DEVICE: isDesktop ? 'desktop' : 'mobile'
+    };
+
     // Step 1: Create/update contact in Brevo (list 3 = "Guide Niches 2026")
     const contactPayload = JSON.stringify({
       email,
-      attributes: { PRENOM: first_name, SIGNUP_DATE: today, SEQUENCE_STEP: 1, PAYS: country },
+      attributes: contactAttributes,
       listIds: [3],
       updateEnabled: true
     });

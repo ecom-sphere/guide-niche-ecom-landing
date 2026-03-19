@@ -1299,20 +1299,40 @@
   <script>
 
 
+    function getUTMParams() {
+      var p = new URLSearchParams(window.location.search);
+      var ref = document.referrer || '';
+      var src = p.get('utm_source') || (ref.includes('tiktok') ? 'tiktok' : ref.includes('instagram') ? 'instagram' : ref.includes('facebook') ? 'facebook' : ref.includes('youtube') ? 'youtube' : 'direct');
+      return {
+        utm_source:   src,
+        utm_medium:   p.get('utm_medium')   || 'organic',
+        utm_campaign: p.get('utm_campaign') || '',
+        utm_content:  p.get('utm_content')  || '',
+        referrer:     ref
+      };
+    }
+
     function submitSIO(e, form) {
       e.preventDefault();
       var btn = form.querySelector('.sio-btn');
       var origText = btn.textContent;
       btn.disabled = true;
       btn.textContent = 'Envoi en cours…';
+      var utm = getUTMParams();
       fetch('/.netlify/functions/submit-optin', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          email:      form.querySelector('[name="email"]').value,
-          first_name: form.querySelector('[name="first_name"]').value,
-          timeZone:   Intl.DateTimeFormat().resolvedOptions().timeZone || 'Europe/Paris',
-          isDesktop:  window.innerWidth >= 768
+          email:        form.querySelector('[name="email"]').value,
+          first_name:   form.querySelector('[name="first_name"]').value,
+          timeZone:     Intl.DateTimeFormat().resolvedOptions().timeZone || 'Europe/Paris',
+          isDesktop:    window.innerWidth >= 768,
+          tunnel:       'guide-niche-ecom',
+          utm_source:   utm.utm_source,
+          utm_medium:   utm.utm_medium,
+          utm_campaign: utm.utm_campaign,
+          utm_content:  utm.utm_content,
+          referrer:     utm.referrer
         })
       })
       .then(function(r) { return r.json(); })
